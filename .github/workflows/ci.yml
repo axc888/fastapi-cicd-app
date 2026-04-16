@@ -27,7 +27,6 @@ jobs:
     - name: Update Manifest Repo
       run: |
         git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/axc888/fastapi-k8s-manifests
-        cd k8s-manifests
 
         sed -i "s|image:.*|image: axc11/fastapi-app:${{ github.sha }}|g" deployment.yaml
 
