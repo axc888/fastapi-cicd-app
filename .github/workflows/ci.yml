@@ -26,12 +26,12 @@ jobs:
 
     - name: Update Manifest Repo
       run: |
-        git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/axc888/fastapi-k8s-manifests
+        git clone https://x-access-token:${{ secrets.MANIFEST_REPO_TOKEN }}@github.com/axc888/fastapi-k8s-manifests
         cd fastapi-k8s-manifests
-        sed -i "s|image:.*|image: axc11/fastapi-app:${{ github.sha }}|g" deployment.yaml
+        sed -i "s|image:.*|image: ***/fastapi-app:${{ github.sha }}|g" deployment.yaml
 
         git config user.name "github-actions"
         git config user.email "actions@github.com"
 
-        git commit -am "Update image"
+        git commit -am "Update image to ${{ github.sha }}"
         git push
