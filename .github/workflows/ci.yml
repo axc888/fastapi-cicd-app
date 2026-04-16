@@ -17,18 +17,19 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Build Image
-      run: docker build -t your-dockerhub/fastapi-app:${{ github.sha }} .
-
-    - name: Push Image
-      run: docker push your-dockerhub/fastapi-app:${{ github.sha }}
+    - name: Build and Push Image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: true
+        tags: axc11/fastapi-app:${{ github.sha }}
 
     - name: Update Manifest Repo
       run: |
-        git clone https://github.com/your-username/k8s-manifests.git
+        git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/axc888/k8s-manifests.git
         cd k8s-manifests
 
-        sed -i "s|image:.*|image: your-dockerhub/fastapi-app:${{ github.sha }}|g" deployment.yaml
+        sed -i "s|image:.*|image: axc11/fastapi-app:${{ github.sha }}|g" deployment.yaml
 
         git config user.name "github-actions"
         git config user.email "actions@github.com"
